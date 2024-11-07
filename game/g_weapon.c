@@ -617,6 +617,18 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 	G_FreeEdict (ent);
 }
 
+void Rocket_Think(edict_t* self) {
+
+	//gi.cprintf(NULL, PRINT_CHAT, "THINK MF: s\n");
+	edict_t *grenade = G_Spawn();
+
+	vec3_t aimdir = { 0.0f,3.0f,0.0f };
+
+	fire_grenade(grenade, self->s.origin, aimdir , 100, 3, 1, 100);
+	
+	self->nextthink = level.time + 5;
+}
+
 void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage)
 {
 	edict_t	*rocket;
@@ -635,8 +647,8 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 	rocket->s.modelindex = gi.modelindex ("models/objects/rocket/tris.md2");
 	rocket->owner = self;
 	rocket->touch = rocket_touch;
-	rocket->nextthink = level.time + 8000/speed;
-	rocket->think = G_FreeEdict;
+	rocket->nextthink = level.time + 1;
+	rocket->think = Rocket_Think;
 	rocket->dmg = damage;
 	rocket->radius_dmg = radius_damage;
 	rocket->dmg_radius = damage_radius;
@@ -914,3 +926,5 @@ void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, f
 
 	gi.linkentity (bfg);
 }
+
+

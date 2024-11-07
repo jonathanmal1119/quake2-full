@@ -829,7 +829,16 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
+	//fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
+
+	int speed = 1000;
+	for (int i = 0; i < 4; i++) {
+		edict_t *newRocket = G_Spawn();
+		VectorAdd(offset, g_offset, offset);
+		fire_rocket(newRocket, start, forward, damage, speed, 10, 10000);
+		speed /= 2;
+	}
+		
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
