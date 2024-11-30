@@ -81,6 +81,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define BODY_QUEUE_SIZE		8
 
+#define FIRE 1
+#define WATER 2
+#define ICE 3
+#define ARMORED 4
+
+
 typedef enum
 {
 	DAMAGE_NO,
@@ -445,6 +451,8 @@ typedef struct
 
 	int			power_armor_type;
 	int			power_armor_power;
+
+	int			ghost_type;
 } monsterinfo_t;
 
 
@@ -959,6 +967,8 @@ struct gclient_s
 
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
+
+	int current_attack_type;
 };
 
 
@@ -1109,5 +1119,7 @@ struct edict_s
 	// common data blocks
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
+
+	int			attack_type;
 };
 

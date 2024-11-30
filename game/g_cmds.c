@@ -919,6 +919,15 @@ void Cmd_SpawnMob_f(edict_t* ent, char* spawn)
 	ED_CallSpawn(enemy);
 }
 
+void Cmd_SpawnItem_f(edict_t* ent, char* iName)
+{
+	gitem_t *item = FindItem(iName);
+	edict_t *itemEnt= G_Spawn();
+	itemEnt->classname = itemEnt->classname;
+	SpawnItem(itemEnt, item);
+	Touch_Item(itemEnt, ent, NULL, NULL);
+}
+
 
 
 
@@ -1012,6 +1021,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_PlayerList_f(ent);
 	else if (Q_stricmp(cmd, "spawn") == 0)
 		Cmd_SpawnMob_f(ent, gi.argv(1));
+	else if (Q_stricmp(cmd, "spawnitem") == 0)
+		Cmd_SpawnItem_f(ent, gi.argv(1));
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

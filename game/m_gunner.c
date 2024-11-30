@@ -282,6 +282,8 @@ mmove_t gunner_move_pain1 = {FRAME_pain101, FRAME_pain118, gunner_frames_pain1, 
 
 void gunner_pain (edict_t *self, edict_t *other, float kick, int damage)
 {
+	gi.centerprintf(other, "Monster Type: %d : Attack Type: %s",self->monsterinfo.ghost_type, other->client->current_attack_type);
+
 	if (self->health < (self->max_health / 2))
 		self->s.skinnum = 1;
 
@@ -618,6 +620,7 @@ void SP_monster_gunner (edict_t *self)
 	self->monsterinfo.melee = NULL;
 	self->monsterinfo.sight = gunner_sight;
 	self->monsterinfo.search = gunner_search;
+	self->monsterinfo.ghost_type = FIRE;
 
 	gi.linkentity (self);
 

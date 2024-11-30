@@ -265,6 +265,13 @@ spawn_t	spawns[] = {
 	{"turret_base", SP_turret_base},
 	{"turret_driver", SP_turret_driver},
 
+	{ "ghost_fire", SP_monster_gunner },
+	//{ "ghost_fire", SP_monster_gunner },
+	//{ "ghost_fire", SP_monster_gunner },
+	//{ "ghost_fire", SP_monster_gunner },
+	//{ "ghost_fire", SP_monster_gunner },
+
+
 	{NULL, NULL}
 };
 

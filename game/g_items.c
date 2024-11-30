@@ -1129,6 +1129,18 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		gi.modelindex (ent->model);
 }
 
+qboolean Pickup_POW(edict_t* ent, edict_t* other)
+{
+
+	for (int i = 0; i < 10; i++) {
+		edict_t* ents = findradius(ent, ent->s.origin, 200);
+		if (ents->monsterinfo != NULL)
+			gi.centerprintf(other, "Found: %s", ents->classname);
+	}
+		
+	return true;
+}
+
 //======================================================================
 
 gitem_t	itemlist[] = 
@@ -2109,6 +2121,27 @@ tank commander's head
 		NULL,
 		0,
 /* precache */ "items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
+	},
+
+	{
+		"POW",
+		Pickup_POW,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/ammo/bullets/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"POW",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
 	},
 
 	// end of list marker
