@@ -610,6 +610,7 @@ void InitClientPersistant (gclient_t *client)
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
+	// Defualt is Blaster
 	item = FindItem("Blaster");
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 1;
@@ -625,6 +626,8 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_grenades	= 50;
 	client->pers.max_cells		= 200;
 	client->pers.max_slugs		= 50;
+
+	client->current_attack_type = VACCUM;
 
 	client->pers.connected = true;
 }

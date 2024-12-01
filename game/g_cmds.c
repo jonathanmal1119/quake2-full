@@ -905,13 +905,14 @@ void Cmd_SpawnMob_f(edict_t* ent, char* spawn)
 {
 	edict_t* enemy = G_Spawn();
 	enemy->classname = spawn;
-	
 
-	vec3_t forward, right, offset;
-	AngleVectors(ent->client->v_angle, forward, right, NULL);
+	vec3_t forward, right, up,offset;
+	AngleVectors(ent->client->v_angle, forward, right, up);
 	
 	VectorScale(forward, 200, forward);
+	VectorScale(up, 50, up);
 	VectorAdd(ent->s.origin, forward, offset);
+	VectorAdd(offset, up, offset);
 
 	for (int i = 0; i < 3; i++)
 		enemy->s.origin[i] = offset[i];
@@ -927,6 +928,46 @@ void Cmd_SpawnItem_f(edict_t* ent, char* iName)
 	SpawnItem(itemEnt, item);
 	Touch_Item(itemEnt, ent, NULL, NULL);
 }
+
+void Cmd_Switch_Attack_f(edict_t* ent, char* attack)
+{
+	if (Q_stricmp(attack, "fire") == 0 && ent->client->hasFire == 1)
+	{
+		gi.bprintf(PRINT_HIGH, "Fire Enabled\n");
+		ent->client->current_attack_type = FIRE;
+		return;
+	}
+
+	if (Q_stricmp(attack, "water") == 0 && ent->client->hasWater == 1)
+	{
+		gi.bprintf(PRINT_HIGH, "Water Enabled\n");
+		ent->client->current_attack_type = WATER;
+		return;
+	}
+
+	if (Q_stricmp(attack, "ice") == 0 && ent->client->hasIce == 1)
+	{
+		gi.bprintf(PRINT_HIGH, "Ice Enabled\n");
+		ent->client->current_attack_type = ICE;
+		return;
+	}
+
+	if (Q_stricmp(attack, "vaccum") == 0)
+	{
+		gi.bprintf(PRINT_HIGH, "Vaccum Enabled\n");
+		ent->client->current_attack_type = VACCUM;
+		return;
+	}
+
+	if (Q_stricmp(attack, "gust") == 0)
+	{
+		gi.bprintf(PRINT_HIGH, "Gust Enabled\n");
+		ent->client->current_attack_type = GUST;
+		return;
+	}
+}
+
+
 
 
 
@@ -1023,6 +1064,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_SpawnMob_f(ent, gi.argv(1));
 	else if (Q_stricmp(cmd, "spawnitem") == 0)
 		Cmd_SpawnItem_f(ent, gi.argv(1));
+	else if (Q_stricmp(cmd, "switch") == 0)
+		Cmd_Switch_Attack_f(ent, gi.argv(1));
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

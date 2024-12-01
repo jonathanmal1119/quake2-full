@@ -1131,13 +1131,31 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 
 qboolean Pickup_POW(edict_t* ent, edict_t* other)
 {
-
 	for (int i = 0; i < 10; i++) {
 		edict_t* ents = findradius(ent, ent->s.origin, 200);
-		if (ents->monsterinfo != NULL)
-			gi.centerprintf(other, "Found: %s", ents->classname);
+		if (ents->monsterinfo.ghost_type != 0) {
+			gi.bprintf(PRINT_HIGH, "Found: %s\n", ents->classname);
+		}
 	}
 		
+	return true;
+}
+
+qboolean Pickup_Fire_Element(edict_t* ent, edict_t* other)
+{
+	other->client->hasFire = 1;
+	return true;
+}
+
+qboolean Pickup_Water_Element(edict_t* ent, edict_t* other)
+{
+	other->client->hasWater = 1;
+	return true;
+}
+
+qboolean Pickup_Ice_Element(edict_t* ent, edict_t* other)
+{
+	other->client->hasIce = 1;
 	return true;
 }
 
@@ -2134,6 +2152,69 @@ tank commander's head
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"POW",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"Fire",
+		Pickup_Fire_Element,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/red_key/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"k_redkey",
+		/* pickup */	"Fire Badge",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"Water",
+		Pickup_Water_Element,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/key/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"k_bluekey",
+		/* pickup */	"Water Badge",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"Ice",
+		Pickup_Ice_Element,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Ice Badge",
 		/* width */		3,
 				50,
 				NULL,

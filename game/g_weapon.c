@@ -305,7 +305,11 @@ Fires a single blaster bolt.  Used by the blaster and hyper blaster.
 */
 void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
+	if (other->monsterinfo.ghost_type != 0)
+		gi.bprintf(PRINT_HIGH, "%s | %d | %s %d\n", other->classname, other->monsterinfo.ghost_type, self->owner->classname, self->owner->client->current_attack_type);
+
 	int		mod;
+	int knock = 50;
 
 	if (other == self->owner)
 		return;
@@ -325,7 +329,42 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 			mod = MOD_HYPERBLASTER;
 		else
 			mod = MOD_BLASTER;
-		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_ENERGY, mod);
+		
+		switch (other->monsterinfo.ghost_type) {
+
+			case FIRE:
+				if (self->owner->client->current_attack_type != WATER) {
+					gi.bprintf(PRINT_HIGH, "Wrong Type!  Enemy is FIRE | Need WATER\n");
+					self->dmg = 0;
+				}
+				break;
+			case WATER:
+				if (self->owner->client->current_attack_type != ICE) {
+					gi.bprintf(PRINT_HIGH, "Wrong Type!  Enemy is WATER | Need ICE\n");
+					self->dmg = 0;
+				}
+				break;
+			case ICE:
+				if (self->owner->client->current_attack_type != FIRE) {
+					gi.bprintf(PRINT_HIGH, "Wrong Type!  Enemy is ICE | Need FIRE\n");
+					self->dmg = 0;
+				}
+				break;
+			case ARMORED:
+				gi.bprintf(PRINT_HIGH, "Armored /2!\n");
+				self->dmg /= 2;
+				break;
+
+		}
+		vec3_t* dir = self->velocity;
+
+		if (self->owner->client->current_attack_type != GUST) {
+			VectorInverse(dir);
+			self->dmg = 0;
+			knock = 120;
+		}
+
+		T_Damage(other, self, self->owner, dir, self->s.origin, plane->normal, self->dmg, knock, DAMAGE_ENERGY, mod);
 	}
 	else
 	{

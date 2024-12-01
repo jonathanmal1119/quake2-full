@@ -144,6 +144,15 @@ void SP_turret_breach (edict_t *self);
 void SP_turret_base (edict_t *self);
 void SP_turret_driver (edict_t *self);
 
+void SP_ghost(edict_t* self);
+void SP_ghost_armored(edict_t* self);
+
+void SP_ghost_fire(edict_t* self);
+void SP_ghost_ice(edict_t* self);
+void SP_ghost_water(edict_t* self);
+
+void SP_ghost_boss(edict_t* self);
+
 
 spawn_t	spawns[] = {
 	{"item_health", SP_item_health},
@@ -265,12 +274,13 @@ spawn_t	spawns[] = {
 	{"turret_base", SP_turret_base},
 	{"turret_driver", SP_turret_driver},
 
-	{ "ghost_fire", SP_monster_gunner },
-	//{ "ghost_fire", SP_monster_gunner },
-	//{ "ghost_fire", SP_monster_gunner },
-	//{ "ghost_fire", SP_monster_gunner },
-	//{ "ghost_fire", SP_monster_gunner },
+	{"ghost", SP_ghost },
+	{"ghost_armored", SP_ghost_armored },
+	{"ghost_fire", SP_ghost_fire },
+	{"ghost_ice", SP_ghost_ice },
+	{"ghost_water", SP_ghost_water },
 
+	{"ghost_boss", SP_ghost_boss },
 
 	{NULL, NULL}
 };

@@ -829,7 +829,8 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
+	//fire_rocket(ent, start, forward, 1000, 1000, effect, hyper);
+	fire_blaster (ent, start, forward, damage * 10, 1000, effect, hyper);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -957,7 +958,7 @@ void Machinegun_Fire (edict_t *ent)
 	vec3_t		forward, right;
 	vec3_t		angles;
 	int			damage = 8;
-	int			kick = 2;
+	int			kick = 0;
 	vec3_t		offset;
 
 	if (!(ent->client->buttons & BUTTON_ATTACK))
@@ -972,7 +973,8 @@ void Machinegun_Fire (edict_t *ent)
 	else
 		ent->client->ps.gunframe = 5;
 
-	if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
+	ent->client->pers.inventory[ent->client->ammo_index]++;
+	/*if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
 	{
 		ent->client->ps.gunframe = 6;
 		if (level.time >= ent->pain_debounce_time)
@@ -982,21 +984,20 @@ void Machinegun_Fire (edict_t *ent)
 		}
 		NoAmmoWeaponChange (ent);
 		return;
-	}
+	}*/
 
 	if (is_quad)
 	{
 		damage *= 4;
-		kick *= 4;
 	}
 
-	for (i=1 ; i<3 ; i++)
+	/*for (i=1 ; i<3 ; i++)
 	{
 		ent->client->kick_origin[i] = crandom() * 0.35;
 		ent->client->kick_angles[i] = crandom() * 0.7;
 	}
 	ent->client->kick_origin[0] = crandom() * 0.35;
-	ent->client->kick_angles[0] = ent->client->machinegun_shots * -1.5;
+	ent->client->kick_angles[0] = ent->client->machinegun_shots * -1.5;*/
 
 	// raise the gun as it is firing
 	if (!deathmatch->value)
@@ -1006,17 +1007,25 @@ void Machinegun_Fire (edict_t *ent)
 			ent->client->machinegun_shots = 9;
 	}
 
-	// get start / end positions
-	VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
-	AngleVectors (angles, forward, right, NULL);
-	VectorSet(offset, 0, 8, ent->viewheight-8);
-	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_MACHINEGUN);
+	//// get start / end positions
+	//VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
+	//AngleVectors (angles, forward, right, NULL);
+	//VectorSet(offset, 0, 0, ent->viewheight);
+	//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-	gi.WriteByte (svc_muzzleflash);
+	AngleVectors(ent->client->v_angle, forward, right, NULL);
+	VectorSet(offset, 24, 8, ent->viewheight - 8);
+	P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+
+	VectorScale(forward, -2, ent->client->kick_origin);
+	ent->client->kick_angles[0] = -1;
+	
+	fire_blaster(ent, start, forward, 10, 1000, 0, 0);
+
+	/*gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
 	gi.WriteByte (MZ_MACHINEGUN | is_silenced);
-	gi.multicast (ent->s.origin, MULTICAST_PVS);
+	gi.multicast (ent->s.origin, MULTICAST_PVS);*/
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 

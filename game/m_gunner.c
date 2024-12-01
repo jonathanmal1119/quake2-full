@@ -282,8 +282,6 @@ mmove_t gunner_move_pain1 = {FRAME_pain101, FRAME_pain118, gunner_frames_pain1, 
 
 void gunner_pain (edict_t *self, edict_t *other, float kick, int damage)
 {
-	gi.centerprintf(other, "Monster Type: %d : Attack Type: %s",self->monsterinfo.ghost_type, other->client->current_attack_type);
-
 	if (self->health < (self->max_health / 2))
 		self->s.skinnum = 1;
 
@@ -620,7 +618,6 @@ void SP_monster_gunner (edict_t *self)
 	self->monsterinfo.melee = NULL;
 	self->monsterinfo.sight = gunner_sight;
 	self->monsterinfo.search = gunner_search;
-	self->monsterinfo.ghost_type = FIRE;
 
 	gi.linkentity (self);
 
@@ -628,4 +625,309 @@ void SP_monster_gunner (edict_t *self)
 	self->monsterinfo.scale = MODEL_SCALE;
 
 	walkmonster_start (self);
+}
+
+void SP_ghost(edict_t* self)
+{
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	sound_death = gi.soundindex("gunner/death1.wav");
+	sound_pain = gi.soundindex("gunner/gunpain2.wav");
+	sound_pain2 = gi.soundindex("gunner/gunpain1.wav");
+	sound_idle = gi.soundindex("gunner/gunidle1.wav");
+	sound_open = gi.soundindex("gunner/gunatck1.wav");
+	sound_search = gi.soundindex("gunner/gunsrch1.wav");
+	sound_sight = gi.soundindex("gunner/sight1.wav");
+
+	gi.soundindex("gunner/gunatck2.wav");
+	gi.soundindex("gunner/gunatck3.wav");
+
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/gunner/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 175;
+	self->gib_health = -70;
+	self->mass = 200;
+
+	self->pain = gunner_pain;
+	self->die = gunner_die;
+
+	self->monsterinfo.stand = gunner_stand;
+	self->monsterinfo.walk = gunner_walk;
+	self->monsterinfo.run = gunner_run;
+	self->monsterinfo.dodge = gunner_dodge;
+	self->monsterinfo.attack = gunner_attack;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = gunner_sight;
+	self->monsterinfo.search = gunner_search;
+	self->monsterinfo.ghost_type = NORMAL;
+
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &gunner_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+	walkmonster_start(self);
+}
+
+void SP_ghost_fire(edict_t* self)
+{
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	sound_death = gi.soundindex("gunner/death1.wav");
+	sound_pain = gi.soundindex("gunner/gunpain2.wav");
+	sound_pain2 = gi.soundindex("gunner/gunpain1.wav");
+	sound_idle = gi.soundindex("gunner/gunidle1.wav");
+	sound_open = gi.soundindex("gunner/gunatck1.wav");
+	sound_search = gi.soundindex("gunner/gunsrch1.wav");
+	sound_sight = gi.soundindex("gunner/sight1.wav");
+
+	gi.soundindex("gunner/gunatck2.wav");
+	gi.soundindex("gunner/gunatck3.wav");
+
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/gunner/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 250;
+	self->gib_health = -70;
+	self->mass = 200;
+
+	self->pain = gunner_pain;
+	self->die = gunner_die;
+
+	self->monsterinfo.stand = gunner_stand;
+	self->monsterinfo.walk = gunner_walk;
+	self->monsterinfo.run = gunner_run;
+	self->monsterinfo.dodge = NULL;
+	self->monsterinfo.attack = gunner_attack;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = gunner_sight;
+	self->monsterinfo.search = gunner_search;
+
+	self->monsterinfo.ghost_type = FIRE;
+
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &gunner_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+	walkmonster_start(self);
+}
+
+void SP_ghost_ice(edict_t* self)
+{
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	sound_death = gi.soundindex("gunner/death1.wav");
+	sound_pain = gi.soundindex("gunner/gunpain2.wav");
+	sound_pain2 = gi.soundindex("gunner/gunpain1.wav");
+	sound_idle = gi.soundindex("gunner/gunidle1.wav");
+	sound_open = gi.soundindex("gunner/gunatck1.wav");
+	sound_search = gi.soundindex("gunner/gunsrch1.wav");
+	sound_sight = gi.soundindex("gunner/sight1.wav");
+
+	gi.soundindex("gunner/gunatck2.wav");
+	gi.soundindex("gunner/gunatck3.wav");
+
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/gunner/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 175;
+	self->gib_health = -70;
+	self->mass = 200;
+
+	self->pain = gunner_pain;
+	self->die = gunner_die;
+
+	self->monsterinfo.stand = gunner_stand;
+	self->monsterinfo.walk = gunner_walk;
+	self->monsterinfo.run = gunner_run;
+	self->monsterinfo.dodge = NULL;
+	self->monsterinfo.attack = gunner_attack;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = gunner_sight;
+	self->monsterinfo.search = gunner_search;
+
+	self->monsterinfo.ghost_type = ICE;
+
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &gunner_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+	walkmonster_start(self);
+}
+
+void SP_ghost_water(edict_t* self)
+{
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	sound_death = gi.soundindex("gunner/death1.wav");
+	sound_pain = gi.soundindex("gunner/gunpain2.wav");
+	sound_pain2 = gi.soundindex("gunner/gunpain1.wav");
+	sound_idle = gi.soundindex("gunner/gunidle1.wav");
+	sound_open = gi.soundindex("gunner/gunatck1.wav");
+	sound_search = gi.soundindex("gunner/gunsrch1.wav");
+	sound_sight = gi.soundindex("gunner/sight1.wav");
+
+	gi.soundindex("gunner/gunatck2.wav");
+	gi.soundindex("gunner/gunatck3.wav");
+
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/gunner/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 175;
+	self->gib_health = -70;
+	self->mass = 200;
+
+	self->pain = gunner_pain;
+	self->die = gunner_die;
+
+	self->monsterinfo.stand = gunner_stand;
+	self->monsterinfo.walk = gunner_walk;
+	self->monsterinfo.run = gunner_run;
+	self->monsterinfo.dodge = NULL;
+	self->monsterinfo.attack = gunner_attack;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = gunner_sight;
+	self->monsterinfo.search = gunner_search;
+
+	self->monsterinfo.ghost_type = WATER;
+
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &gunner_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+	walkmonster_start(self);
+}
+
+void SP_ghost_armored(edict_t* self)
+{
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	sound_death = gi.soundindex("gunner/death1.wav");
+	sound_pain = gi.soundindex("gunner/gunpain2.wav");
+	sound_pain2 = gi.soundindex("gunner/gunpain1.wav");
+	sound_idle = gi.soundindex("gunner/gunidle1.wav");
+	sound_open = gi.soundindex("gunner/gunatck1.wav");
+	sound_search = gi.soundindex("gunner/gunsrch1.wav");
+	sound_sight = gi.soundindex("gunner/sight1.wav");
+
+	gi.soundindex("gunner/gunatck2.wav");
+	gi.soundindex("gunner/gunatck3.wav");
+
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/gunner/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 175;
+	self->gib_health = -70;
+	self->mass = 200;
+
+	self->pain = gunner_pain;
+	self->die = gunner_die;
+
+	self->monsterinfo.stand = gunner_stand;
+	self->monsterinfo.walk = gunner_walk;
+	self->monsterinfo.run = gunner_run;
+	self->monsterinfo.dodge = NULL;
+	self->monsterinfo.attack = gunner_attack;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = gunner_sight;
+	self->monsterinfo.search = gunner_search;
+
+	self->monsterinfo.ghost_type = ARMORED;
+
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &gunner_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+	walkmonster_start(self);
+}
+
+void SP_ghost_boss(edict_t* self)
+{
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	sound_death = gi.soundindex("gunner/death1.wav");
+	sound_pain = gi.soundindex("gunner/gunpain2.wav");
+	sound_pain2 = gi.soundindex("gunner/gunpain1.wav");
+	sound_idle = gi.soundindex("gunner/gunidle1.wav");
+	sound_open = gi.soundindex("gunner/gunatck1.wav");
+	sound_search = gi.soundindex("gunner/gunsrch1.wav");
+	sound_sight = gi.soundindex("gunner/sight1.wav");
+
+	gi.soundindex("gunner/gunatck2.wav");
+	gi.soundindex("gunner/gunatck3.wav");
+
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/gunner/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 175;
+	self->gib_health = -70;
+	self->mass = 200;
+
+	self->pain = gunner_pain;
+	self->die = gunner_die;
+
+	self->monsterinfo.stand = gunner_stand;
+	self->monsterinfo.walk = gunner_walk;
+	self->monsterinfo.run = gunner_run;
+	self->monsterinfo.dodge = NULL;
+	self->monsterinfo.attack = gunner_attack;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = gunner_sight;
+	self->monsterinfo.search = gunner_search;
+
+	self->monsterinfo.ghost_type = NORMAL;
+
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &gunner_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+	walkmonster_start(self);
 }

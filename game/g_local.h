@@ -81,10 +81,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define BODY_QUEUE_SIZE		8
 
-#define FIRE 1
-#define WATER 2
-#define ICE 3
-#define ARMORED 4
+#define VACCUM 0
+
+#define NORMAL 1
+#define FIRE 2
+#define WATER 3
+#define ICE 4
+#define ARMORED 5
+
+#define GUST 11
+
 
 
 typedef enum
@@ -968,7 +974,11 @@ struct gclient_s
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
 
-	int current_attack_type;
+	int			current_attack_type;
+
+	int			hasFire;
+	int			hasWater;
+	int			hasIce;
 };
 
 
