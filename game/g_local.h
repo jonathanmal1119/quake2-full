@@ -92,6 +92,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define GUST 11
 
 
+// Powerups
+#define STAR 1
+#define MINI_MUSHROOM 2
+#define FIRE_FLOWER 3
+#define ICE_FLOWER 4
+#define BOOMERANG 5
 
 typedef enum
 {
@@ -979,6 +985,9 @@ struct gclient_s
 	int			hasFire;
 	int			hasWater;
 	int			hasIce;
+
+	int			activePowerup;
+	int			activePowerupCount;
 };
 
 
@@ -1131,5 +1140,6 @@ struct edict_s
 	monsterinfo_t	monsterinfo;
 
 	int			attack_type;
+	int			isInvisible;
 };
 

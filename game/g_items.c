@@ -1131,11 +1131,17 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 
 qboolean Pickup_POW(edict_t* ent, edict_t* other)
 {
-	for (int i = 0; i < 10; i++) {
-		edict_t* ents = findradius(ent, ent->s.origin, 200);
-		if (ents->monsterinfo.ghost_type != 0) {
-			gi.bprintf(PRINT_HIGH, "Found: %s\n", ents->classname);
-		}
+	edict_t* found = NULL;
+	while ((found = findradius(found, ent->s.origin, 200)) != NULL) {
+
+		if (found == other)
+			continue;
+
+		if (!found->takedamage)
+			continue;
+
+		gi.bprintf(PRINT_HIGH, "Found: %s\n", found->classname);
+		T_Damage(found, other, other, other->velocity, other->s.origin, vec3_origin, 50, 1000, DAMAGE_RADIUS, MOD_BFG_EFFECT);
 	}
 		
 	return true;
@@ -1156,6 +1162,44 @@ qboolean Pickup_Water_Element(edict_t* ent, edict_t* other)
 qboolean Pickup_Ice_Element(edict_t* ent, edict_t* other)
 {
 	other->client->hasIce = 1;
+	return true;
+}
+
+
+// Power Ups
+
+qboolean Pickup_Star(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "Star Power Activated");
+	other->client->activePowerup = STAR;
+	return true;
+}
+
+qboolean Pickup_Mini_Mushroom(edict_t* ent, edict_t* other)
+{
+	other->health /= 2;
+	other->client->activePowerup = MINI_MUSHROOM;
+	return true;
+}
+
+qboolean Pickup_Boomerang(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "Boomerang Activated");
+	other->client->activePowerup = BOOMERANG;
+	return true;
+}
+
+qboolean Pickup_Fire_Flower(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "Fire Flower Activated");
+	other->client->activePowerup = FIRE_FLOWER;
+	return true;
+}
+
+qboolean Pickup_Ice_Flower(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "Ice Flower Activated");
+	other->client->activePowerup = ICE_FLOWER;
 	return true;
 }
 
@@ -2163,7 +2207,7 @@ tank commander's head
 	},
 
 	{
-		"Fire",
+		"fire",
 		Pickup_Fire_Element,
 		NULL,
 		Drop_General,
@@ -2184,7 +2228,7 @@ tank commander's head
 	},
 
 	{
-		"Water",
+		"water",
 		Pickup_Water_Element,
 		NULL,
 		Drop_General,
@@ -2205,7 +2249,7 @@ tank commander's head
 	},
 
 	{
-		"Ice",
+		"ice",
 		Pickup_Ice_Element,
 		NULL,
 		Drop_General,
@@ -2215,6 +2259,111 @@ tank commander's head
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Ice Badge",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"star",
+		Pickup_Star,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/pack/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		NULL,
+		/* pickup */	"Ice Badge",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"mini_mushroom",
+		Pickup_Mini_Mushroom,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Mini Mushroom",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"boomerang",
+		Pickup_Boomerang,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Boomerang",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"fire_flower",
+		Pickup_Fire_Flower,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Fire Flower",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"ice_flower",
+		Pickup_Ice_Flower,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Ice Flower",
 		/* width */		3,
 				50,
 				NULL,

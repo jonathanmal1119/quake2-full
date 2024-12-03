@@ -309,7 +309,7 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 		gi.bprintf(PRINT_HIGH, "%s | %d | %s %d\n", other->classname, other->monsterinfo.ghost_type, self->owner->classname, self->owner->client->current_attack_type);
 
 	int		mod;
-	int knock = 50;
+	int		knock = 50;
 
 	if (other == self->owner)
 		return;
@@ -358,10 +358,12 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 		}
 		vec3_t* dir = self->velocity;
 
-		if (self->owner->client->current_attack_type != GUST) {
-			VectorInverse(dir);
-			self->dmg = 0;
-			knock = 120;
+		if (self->client != NULL) {			
+			if (self->owner->client->current_attack_type != GUST && other->client != NULL) {
+				VectorInverse(dir);
+				self->dmg = 0;
+				knock = 200;
+			}
 		}
 
 		T_Damage(other, self, self->owner, dir, self->s.origin, plane->normal, self->dmg, knock, DAMAGE_ENERGY, mod);
@@ -804,6 +806,13 @@ void bfg_explode (edict_t *self)
 
 void bfg_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
+
+	if (self->attack_type == ICE) {
+		other->nextthink = level.time + 5;
+		self->think = G_FreeEdict;
+		self->nextthink = level.time + FRAMETIME;
+		return;
+	}
 	if (other == self->owner)
 		return;
 
@@ -863,6 +872,9 @@ void bfg_think (edict_t *self)
 		if (ent == self)
 			continue;
 
+		if (ent->client != NULL)
+			continue;
+
 		if (ent == self->owner)
 			continue;
 
@@ -880,7 +892,7 @@ void bfg_think (edict_t *self)
 		ignore = self;
 		VectorCopy (self->s.origin, start);
 		VectorMA (start, 2048, dir, end);
-		while(1)
+		while(1 && self->attack_type != ICE)
 		{
 			tr = gi.trace (start, NULL, NULL, end, ignore, CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_DEADMONSTER);
 
@@ -888,7 +900,7 @@ void bfg_think (edict_t *self)
 				break;
 
 			// hurt it if we can
-			if ((tr.ent->takedamage) && !(tr.ent->flags & FL_IMMUNE_LASER) && (tr.ent != self->owner))
+			if ((tr.ent->takedamage) && (!(tr.ent->flags & FL_IMMUNE_LASER)) && (tr.ent != self->owner))
 				T_Damage (tr.ent, self, self->owner, dir, tr.endpos, vec3_origin, dmg, 1, DAMAGE_ENERGY, MOD_BFG_LASER);
 
 			// if we hit something that's not a monster or player we're done
@@ -916,6 +928,44 @@ void bfg_think (edict_t *self)
 	}
 
 	self->nextthink = level.time + FRAMETIME;
+}
+
+void fire_custom_bfg(edict_t* self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int attck_type)
+{
+	edict_t* bfg;
+
+	bfg = G_Spawn();
+	VectorCopy(start, bfg->s.origin);
+	VectorCopy(dir, bfg->movedir);
+	vectoangles(dir, bfg->s.angles);
+	VectorScale(dir, speed, bfg->velocity);
+	bfg->movetype = MOVETYPE_FLYMISSILE;
+	bfg->clipmask = MASK_SHOT;
+	bfg->solid = SOLID_BBOX;
+	bfg->s.effects |= EF_BFG | EF_ANIM_ALLFAST;
+	VectorClear(bfg->mins);
+	VectorClear(bfg->maxs);
+	bfg->s.modelindex = gi.modelindex("sprites/s_bfg1.sp2");
+	bfg->owner = self;
+	bfg->touch = bfg_touch;
+	bfg->nextthink = level.time + 8000 / speed;
+	bfg->think = G_FreeEdict;
+	bfg->radius_dmg = damage;
+	bfg->dmg_radius = damage_radius;
+	bfg->classname = "bfg blast";
+	bfg->s.sound = gi.soundindex("weapons/bfg__l1a.wav");
+
+	bfg->think = bfg_think;
+	bfg->nextthink = level.time + FRAMETIME;
+	bfg->teammaster = bfg;
+	bfg->teamchain = NULL;
+
+	bfg->attack_type = attck_type;
+
+	if (self->client)
+		check_dodge(self, bfg->s.origin, dir, speed);
+
+	gi.linkentity(bfg);
 }
 
 

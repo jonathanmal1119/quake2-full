@@ -628,6 +628,8 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 
 	client->current_attack_type = VACCUM;
+	client->activePowerup = 0;
+	client->activePowerupCount = 0;
 
 	client->pers.connected = true;
 }
@@ -1658,7 +1660,14 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			PlayerNoise(ent, ent->s.origin, PNOISE_SELF);
 		}
 
-		ent->viewheight = pm.viewheight;
+		if (ent->client->activePowerup == MINI_MUSHROOM) {
+			ent->viewheight = pm.viewheight / 4;
+		}
+		else {
+			ent->viewheight = pm.viewheight;
+		}
+
+
 		ent->waterlevel = pm.waterlevel;
 		ent->watertype = pm.watertype;
 		ent->groundentity = pm.groundentity;
@@ -1693,7 +1702,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				continue;	// duplicated
 			if (!other->touch)
 				continue;
-			other->touch (other, ent, NULL, NULL);
+			other->touch (other, ent, NULL, NULL);//
 		}
 
 	}
@@ -1743,6 +1752,50 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		other = g_edicts + i;
 		if (other->inuse && other->client->chase_target == ent)
 			UpdateChaseCam(other);
+	}
+
+	switch (ent->client->activePowerup) {
+		case STAR:
+			if (ent->client->activePowerupCount >= 1500) {
+				gi.centerprintf(other, "Star Power Deactivated");
+				ent->client->activePowerup = 0;
+				ent->client->activePowerupCount = 0;
+				return;
+			}
+
+			edict_t* found = NULL;
+			while ((found = findradius(found, ent->s.origin, 50)) != NULL) {
+
+				if (found == ent)
+					continue;
+
+				if (!ent->takedamage)
+					continue;
+
+				T_Damage(found, ent, ent, ent->velocity, ent->s.origin, vec3_origin, 1000, 0, DAMAGE_RADIUS, MOD_BFG_EFFECT);
+			}
+			ent->client->activePowerupCount++;
+			break;
+
+		case FIRE_FLOWER:
+			if (ent->client->activePowerupCount >= 1000) {
+				gi.centerprintf(other, "Fire Flower Deactivated");
+				ent->client->activePowerup = 0;
+				ent->client->activePowerupCount = 0;
+				return;
+			}
+			ent->client->activePowerupCount++;
+			break;
+
+		case ICE_FLOWER:
+			if (ent->client->activePowerupCount >= 1000) {
+				gi.centerprintf(other, "Ice Flower Deactivated");
+				ent->client->activePowerup = 0;
+				ent->client->activePowerupCount = 0;
+				return;
+			}
+			ent->client->activePowerupCount++;
+			break;
 	}
 }
 
