@@ -1203,6 +1203,13 @@ qboolean Pickup_Ice_Flower(edict_t* ent, edict_t* other)
 	return true;
 }
 
+qboolean Pickup_One_Up(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "+1 Extra Life");
+	other->one_ups++;
+	return true;
+}
+
 //======================================================================
 
 gitem_t	itemlist[] = 
@@ -2364,6 +2371,27 @@ tank commander's head
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Ice Flower",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"one_up",
+		Pickup_One_Up,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"1 Up",
 		/* width */		3,
 				50,
 				NULL,

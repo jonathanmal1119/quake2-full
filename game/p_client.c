@@ -500,6 +500,14 @@ player_die
 */
 void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
+
+	if (self->one_ups > 0) {
+		gi.centerprintf(self, "1-Up Used");
+		self->one_ups--;
+		self->health = self->max_health;
+		return;
+	}
+
 	int		n;
 
 	VectorClear (self->avelocity);

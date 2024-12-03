@@ -1141,5 +1141,7 @@ struct edict_s
 
 	int			attack_type;
 	int			isInvisible;
+
+	int			one_ups;
 };
 

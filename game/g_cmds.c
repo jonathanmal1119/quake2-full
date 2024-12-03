@@ -1000,6 +1000,21 @@ void shoot_ice_ball(edict_t* ent) {
 	vec3_t	forward, right;
 	int		damage = 10;
 
+	edict_t* iceball = G_Spawn();
+
+	AngleVectors(ent->client->v_angle, forward, right, NULL);
+
+	VectorSet(offset, 150, 8, ent->viewheight - 8);
+	P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+
+	fire_custom_bfg(iceball, start, forward, 0, 400, 0, ICE);
+}
+
+void shoot_boomerang(edict_t* ent) {
+	vec3_t	offset, start;
+	vec3_t	forward, right;
+	int		damage = 10;
+
 	edict_t* fireball = G_Spawn();
 
 	AngleVectors(ent->client->v_angle, forward, right, NULL);
@@ -1007,14 +1022,16 @@ void shoot_ice_ball(edict_t* ent) {
 	VectorSet(offset, 150, 8, ent->viewheight - 8);
 	P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
 
-	fire_custom_bfg(fireball, start, forward, 0, 400, 0, ICE);
+	//fire_custom_bfg(fireball, start, forward, 0, 400, 0, ICE);
+	fire_boomerang(ent, start, forward, 20, 400);
 }
 
 void Cmd_Shoot(edict_t* ent, char* attack) {
 
-	
+	gi.centerprintf(ent, "Active: %d = 5", ent->client->activePowerup);
 	switch (ent->client->activePowerup) {
 		case BOOMERANG:
+			shoot_boomerang(ent);
 			break;
 		case FIRE_FLOWER:	
 			shoot_fire_ball(ent);
