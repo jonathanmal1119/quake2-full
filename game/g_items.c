@@ -1177,6 +1177,7 @@ qboolean Pickup_Star(edict_t* ent, edict_t* other)
 
 qboolean Pickup_Mini_Mushroom(edict_t* ent, edict_t* other)
 {
+	gi.centerprintf(other, "Mini Mushroom Activated");
 	other->health /= 2;
 	other->client->activePowerup = MINI_MUSHROOM;
 	return true;
@@ -1203,12 +1204,46 @@ qboolean Pickup_Ice_Flower(edict_t* ent, edict_t* other)
 	return true;
 }
 
+// Other items
+
 qboolean Pickup_One_Up(edict_t* ent, edict_t* other)
 {
 	gi.centerprintf(other, "+1 Extra Life");
 	other->one_ups++;
 	return true;
 }
+
+qboolean Pickup_Coin(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "+1 Coin %d", other->one_ups);
+	other->coins++;
+
+	if (other->coins >= 10) {
+		other->coins = 0;
+		gi.centerprintf(other, "+1 Extra Life");
+		other->one_ups++;
+	}
+	
+	return true;
+}
+
+qboolean Pickup_Mushroom(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "Mushroom Activated");
+	other->health = other->max_health;
+	other->client->activePowerup = 0;
+	return true;
+}
+
+qboolean Pickup_Wings(edict_t * ent, edict_t * other)
+{
+	gi.centerprintf(other, "Wings Activated");
+	other->movetype = MOVETYPE_NOCLIP;
+	other->client->activePowerup = WINGS;
+	return true;
+}
+
+
 
 //======================================================================
 
@@ -2319,6 +2354,27 @@ tank commander's head
 	},
 
 	{
+		"mushroom",
+		Pickup_Mushroom,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Mushroom",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
 		"boomerang",
 		Pickup_Boomerang,
 		NULL,
@@ -2402,6 +2458,47 @@ tank commander's head
 				/* precache */ ""
 	},
 
+	{
+		"coin",
+		Pickup_Coin,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Coin",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"wings",
+		Pickup_Wings,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Wings",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
 	// end of list marker
 	{NULL}
 };

@@ -190,7 +190,6 @@ void P_DamageFeedback (edict_t *player)
 
 		client->v_dmg_time = level.time + DAMAGE_TIME;
 	}
-
 	//
 	// clear totals
 	//

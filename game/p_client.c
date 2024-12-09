@@ -1804,6 +1804,21 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			}
 			ent->client->activePowerupCount++;
 			break;
+
+		case WINGS:
+			if (ent->client->activePowerupCount == 600) {
+				gi.centerprintf(other, "Wings will deactivate soon.");
+			}
+			else if (ent->client->activePowerupCount >= 1100) {
+				gi.centerprintf(other, "Wings Deactivated");
+				ent->client->activePowerup = 0;
+				ent->client->activePowerupCount = 0;
+				ent->movetype = MOVETYPE_WALK;
+				return;
+			}
+
+			ent->client->activePowerupCount++;
+			break;
 	}
 }
 

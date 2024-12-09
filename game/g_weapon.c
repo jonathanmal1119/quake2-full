@@ -358,11 +358,12 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 		}
 		vec3_t* dir = self->velocity;
 
-		if (self->client != NULL) {			
-			if (self->owner->client->current_attack_type != GUST && other->client != NULL) {
+		if (self->owner->client != NULL) {	
+			if (self->owner->client->current_attack_type != GUST) {
+				gi.centerprintf(self->owner, "Vaccum2");
 				VectorInverse(dir);
-				self->dmg = 0;
-				knock = 200;
+				self->dmg = 13;
+				knock = 50;
 			}
 		}
 
@@ -882,6 +883,8 @@ void bfg_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 		self->nextthink = level.time + FRAMETIME;
 		return;
 	}
+
+
 	if (other == self->owner)
 		return;
 
