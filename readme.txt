@@ -1,29 +1,82 @@
+How to get the mod Running:
 
-This is the complete source code for Quake 2, version 3.19, buildable with
-visual C++ 6.0.  The linux version should be buildable, but we haven't
-tested it for the release.
+Download the repository.
+Create a mod folder within your Quake 2 game folder.
+Copy config.cfg from the configs folder in the repository.
+Copy pak0.pak file from baseq2.
+Open it with the quake pak viewer.
+Compile the repository code in release mode.
+Overwrite the gamex86.dll in the  pak0.pak file with the newly compiled Gamex86.dll.
+Launch the game and load up the mod with the same name as your mod folder.
+Play!
+How to See the features of the Mod.
 
-The code is all licensed under the terms of the GPL (gnu public license).  
-You should read the entire license, but the gist of it is that you can do 
-anything you want with the code, including sell your new version.  The catch 
-is that if you distribute new binary versions, you are required to make the 
-entire source code available for free to everyone.
+5 Features
 
-The primary intent of this release is for entertainment and educational 
-purposes, but the GPL does allow commercial exploitation if you obey the 
-full license.  If you want to do something commercial and you just can't bear 
-to have your source changes released, we could still negotiate a separate 
-license agreement (for $$$), but I would encourage you to just live with the 
-GPL.
+Luigi's Basic and Elemental attacks
 
-All of the Q2 data files remain copyrighted and licensed under the 
-original terms, so you cannot redistribute data from the original game, but if 
-you do a true total conversion, you can create a standalone game based on 
-this code.
+Fire Upgrade
+Water Upgrade
+Ice Upgrade
+Gust Attack
+Vacuum Attack
 
-Thanks to Robert Duffy for doing the grunt work of building this release.
+5 Ghosts to vacuum
+Ice Ghost
+Fire Ghost
+Water Ghost
+Regular
+Armored
 
-John Carmack
-Id Software
+5 Other items/power-ups
+Coin
+Mushroom
+Wings
+TDB
+1 UP
 
+5 classic Mario power-ups
+Star
+Mini Mushroom
+Fire Flower
+Add fire effect
+Ice Flower
+POW Block
 
+1 game braking boss
+Boolossus
+
+How to see these features in game:
+
+Switching types
+use Switch <element>
+
+Vaccuming
+Give yourself the machinegun and it will pull the enemies closer and eventually kill them.
+give machinegun
+
+Spawn function
+spawn <monster/item name>
+
+Ghost Names
+
+ghost_fire
+ghost_water
+ghost_ice
+ghost_regular
+ghost_armored
+ghost_boss
+
+Item Names
+
+star
+mini_mushroom
+fire_flower
+ice_flower
+POW
+
+coin
+mushroom
+wings
+
+one_up
