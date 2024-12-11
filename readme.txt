@@ -3,18 +3,14 @@ How to get the mod Running:
 Download the repository.
 Create a mod folder within your Quake 2 game folder.
 Copy config.cfg from the configs folder in the repository.
-Copy pak0.pak file from baseq2.
-Open it with the quake pak viewer.
 Compile the repository code in release mode.
-Overwrite the gamex86.dll in the  pak0.pak file with the newly compiled Gamex86.dll.
-Launch the game and load up the mod with the same name as your mod folder.
+Overwrite the gamex86.dll in your mod folder with the newly compiled gamex86.dll.
+Launch the game and run the command set game <name of mod>.
 Play!
+
 How to See the features of the Mod.
 
-5 Features
-
 Luigi's Basic and Elemental attacks
-
 Fire Upgrade
 Water Upgrade
 Ice Upgrade
@@ -22,10 +18,10 @@ Gust Attack
 Vacuum Attack
 
 5 Ghosts to vacuum
+Regular
 Ice Ghost
 Fire Ghost
 Water Ghost
-Regular
 Armored
 
 5 Other items/power-ups
@@ -59,7 +55,6 @@ Spawn function
 spawn <monster/item name>
 
 Ghost Names
-
 ghost
 ghost_fire
 ghost_water
@@ -68,7 +63,6 @@ ghost_armored
 ghost_boss
 
 Item Names
-
 star
 mini_mushroom
 fire_flower
