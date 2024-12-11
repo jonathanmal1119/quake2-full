@@ -1161,5 +1161,6 @@ struct edict_s
 
 	int			one_ups;
 	int			coins;
+	int			hasVacuumUpgrade;
 };
 

@@ -336,22 +336,24 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 				if (self->owner->client->current_attack_type != WATER) {
 					gi.bprintf(PRINT_HIGH, "Wrong Type!  Enemy is FIRE | Need WATER\n");
 					self->dmg = 0;
+					knock = 0;
 				}
 				break;
 			case WATER:
 				if (self->owner->client->current_attack_type != ICE) {
 					gi.bprintf(PRINT_HIGH, "Wrong Type!  Enemy is WATER | Need ICE\n");
 					self->dmg = 0;
+					knock = 0;
 				}
 				break;
 			case ICE:
 				if (self->owner->client->current_attack_type != FIRE) {
 					gi.bprintf(PRINT_HIGH, "Wrong Type!  Enemy is ICE | Need FIRE\n");
 					self->dmg = 0;
+					knock = 0;
 				}
 				break;
 			case ARMORED:
-				gi.bprintf(PRINT_HIGH, "Armored /2!\n");
 				self->dmg /= 2;
 				break;
 
@@ -359,10 +361,13 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 		vec3_t* dir = self->velocity;
 
 		if (self->owner->client != NULL) {	
+
+			if (self->owner->hasVacuumUpgrade == 1)
+				knock += 100;
+
 			if (self->owner->client->current_attack_type != GUST) {
 				VectorInverse(dir);
 				self->dmg = 13;
-				knock = 50;
 			}
 		}
 

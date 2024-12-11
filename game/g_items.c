@@ -1243,6 +1243,13 @@ qboolean Pickup_Wings(edict_t * ent, edict_t * other)
 	return true;
 }
 
+qboolean Pickup_V_Upgrade(edict_t* ent, edict_t* other)
+{
+	gi.centerprintf(other, "Vacuum Upgrade Activated");
+	other->hasVacuumUpgrade = 1;
+	return true;
+}
+
 
 
 //======================================================================
@@ -2339,7 +2346,7 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Mini Mushroom",
@@ -2360,7 +2367,7 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Mushroom",
@@ -2381,7 +2388,7 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Boomerang",
@@ -2402,7 +2409,7 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Fire Flower",
@@ -2423,7 +2430,7 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Ice Flower",
@@ -2444,7 +2451,7 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"1 Up",
@@ -2465,7 +2472,7 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Coin",
@@ -2486,10 +2493,31 @@ tank commander's head
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		"models/items/pack/tris.md2", EF_ROTATE,
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Wings",
+		/* width */		3,
+				50,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	{
+		"vacuum_upgrade",
+		Pickup_V_Upgrade,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/pack/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"a_bullets",
+		/* pickup */	"Vaccum Upgrade",
 		/* width */		3,
 				50,
 				NULL,

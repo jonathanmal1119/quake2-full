@@ -362,7 +362,7 @@ void HelpComputer (edict_t *ent)
 		"POW block",
 		"5 Other Items/PowerUps",
 		"Coins, Mushroom, Wings",
-		"1-Up, TBD",
+		"1-Up, Vacuum Upgrade",
 		"Fight the boss!",
 		"Controls",
 		"Vaccum by shooting",

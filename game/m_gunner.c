@@ -336,6 +336,12 @@ void gunner_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 {
 	int		n;
 
+	if (self->monsterinfo.ghost_type == ARMORED) {
+		self->health = self->max_health;
+		self->monsterinfo.ghost_type = NORMAL;
+		return;
+	}
+
 // check for gib
 	if (self->health <= self->gib_health)
 	{
