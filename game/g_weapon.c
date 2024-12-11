@@ -360,7 +360,6 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 
 		if (self->owner->client != NULL) {	
 			if (self->owner->client->current_attack_type != GUST) {
-				gi.centerprintf(self->owner, "Vaccum2");
 				VectorInverse(dir);
 				self->dmg = 13;
 				knock = 50;

@@ -466,11 +466,69 @@ void boss2_reattack_mg (edict_t *self)
 		self->monsterinfo.currentmove = &boss2_move_attack_post_mg;
 }
 
+void Spawn_boss_enemies(edict_t *boss) {
+	vec3_t forward, oforward,right, up, oup, offset;
+	AngleVectors(boss->s.angles, forward, right, up);
 
-void boss2_pain (edict_t *self, edict_t *other, float kick, int damage)
+	VectorInverse(forward);
+
+	for (int i = 0; i < 5; i++) {
+		edict_t* enemy = G_Spawn();
+		enemy->classname = "monster_soldier";
+		enemy->owner = boss;
+
+		VectorScale(up, 50, oup);
+		VectorScale(forward, (40 * i), oforward);
+
+		VectorAdd(boss->s.origin, oup, offset);
+		VectorAdd(offset, oforward, offset);
+
+		for (int i = 0; i < 3; i++)
+			enemy->s.origin[i] = offset[i];
+
+		ED_CallSpawn(enemy);
+
+		boss->monsterinfo.enemies_left++;
+	}
+}
+
+
+void boss2_pain(edict_t* self, edict_t* other, float kick, int damage)
 {
-	if (self->health < (self->max_health / 2))
-		self->s.skinnum = 1;
+	gi.bprintf(PRINT_HIGH, "HP: %d | %d | Enemies:%d\n", self->health, self->monsterinfo.in_enemy_phase, self->monsterinfo.enemies_left);
+	if (self->monsterinfo.in_enemy_phase == 1) {
+		self->nextthink = level.time + 1000;
+		self->health += damage;
+		return;
+	}
+
+
+	if (self->health < (self->max_health * 0.25) && self->monsterinfo.phase3 == 0) {
+		if (self->monsterinfo.in_enemy_phase == 0) {
+			self->monsterinfo.in_enemy_phase = 1;
+			self->nextthink = level.time + 1000;
+			Spawn_boss_enemies(self);
+			return;
+		}
+	}
+	else if (self->health < (self->max_health * 0.50) && self->monsterinfo.phase2 == 0) {
+		if (self->monsterinfo.in_enemy_phase == 0) {
+			self->monsterinfo.in_enemy_phase = 1;
+			self->nextthink = level.time + 1000;
+			Spawn_boss_enemies(self);
+			return;
+		}
+	}
+	else if (self->health < (self->max_health * 0.75) && self->monsterinfo.phase1 == 0) {
+		if (self->monsterinfo.in_enemy_phase == 0) {
+			self->monsterinfo.in_enemy_phase = 1;
+			self->nextthink = level.time + 1000;
+			Spawn_boss_enemies(self);
+			return;
+		}
+
+	}
+
 
 	if (level.time < self->pain_debounce_time)
 		return;
@@ -655,7 +713,7 @@ void SP_monster_boss2 (edict_t *self)
 	VectorSet (self->mins, -56, -56, 0);
 	VectorSet (self->maxs, 56, 56, 80);
 
-	self->health = 2000;
+	self->health = 1000;
 	self->gib_health = -200;
 	self->mass = 1000;
 
@@ -676,4 +734,54 @@ void SP_monster_boss2 (edict_t *self)
 	self->monsterinfo.scale = MODEL_SCALE;
 
 	flymonster_start (self);
+}
+
+void SP_ghost_boss(edict_t* self)
+{
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	sound_pain1 = gi.soundindex("bosshovr/bhvpain1.wav");
+	sound_pain2 = gi.soundindex("bosshovr/bhvpain2.wav");
+	sound_pain3 = gi.soundindex("bosshovr/bhvpain3.wav");
+	sound_death = gi.soundindex("bosshovr/bhvdeth1.wav");
+	sound_search1 = gi.soundindex("bosshovr/bhvunqv1.wav");
+
+	self->s.sound = gi.soundindex("bosshovr/bhvengn1.wav");
+
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/boss2/tris.md2");
+	VectorSet(self->mins, -56, -56, 0);
+	VectorSet(self->maxs, 56, 56, 80);
+
+	self->health = 1000;
+	self->gib_health = -200;
+	self->mass = 1000;
+
+	self->flags |= FL_IMMUNE_LASER;
+
+	self->pain = boss2_pain;
+	self->die = boss2_die;
+
+	self->monsterinfo.stand = boss2_stand;
+	self->monsterinfo.walk = boss2_walk;
+	self->monsterinfo.run = boss2_run;
+	self->monsterinfo.attack = boss2_attack;
+	self->monsterinfo.search = boss2_search;
+	self->monsterinfo.checkattack = Boss2_CheckAttack;
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &boss2_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+	self->monsterinfo.in_enemy_phase = 0;
+	self->monsterinfo.phase1 = 0;
+	self->monsterinfo.phase2 = 0;
+	self->monsterinfo.phase3 = 0;
+
+	flymonster_start(self);
 }

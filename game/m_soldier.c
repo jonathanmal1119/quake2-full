@@ -1141,10 +1141,36 @@ mframe_t soldier_frames_death6 [] =
 };
 mmove_t soldier_move_death6 = {FRAME_death601, FRAME_death610, soldier_frames_death6, soldier_dead};
 
+void decrement_boss_counter(edict_t* self) {
+
+	if (self->owner != NULL) {
+
+		if (self->owner->monsterinfo.enemies_left > 0) {
+			self->owner->monsterinfo.enemies_left--;
+
+			if (self->owner->monsterinfo.enemies_left == 0) {
+				self->owner->nextthink = level.time + 0.1;
+				self->owner->monsterinfo.in_enemy_phase = 0;
+
+				if (self->owner->monsterinfo.phase1 == 0) {
+					self->owner->monsterinfo.phase1 = 1;
+				}
+				else if (self->owner->monsterinfo.phase2 == 0) {
+					self->owner->monsterinfo.phase2 = 1;
+				}
+				else if (self->owner->monsterinfo.phase3 == 0) {
+					self->owner->monsterinfo.phase3 = 1;
+				}
+			}
+		}
+	}
+}
+
 void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
 	int		n;
 
+	
 // check for gib
 	if (self->health <= self->gib_health)
 	{
@@ -1154,6 +1180,7 @@ void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 		ThrowGib (self, "models/objects/gibs/chest/tris.md2", damage, GIB_ORGANIC);
 		ThrowHead (self, "models/objects/gibs/head2/tris.md2", damage, GIB_ORGANIC);
 		self->deadflag = DEAD_DEAD;
+		decrement_boss_counter(self);
 		return;
 	}
 
@@ -1163,7 +1190,9 @@ void soldier_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 // regular death
 	self->deadflag = DEAD_DEAD;
 	self->takedamage = DAMAGE_YES;
-	self->s.skinnum |= 1;
+	self->s.skinnum |= 1;	
+
+	decrement_boss_counter(self);
 
 	if (self->s.skinnum == 1)
 		gi.sound (self, CHAN_VOICE, sound_death_light, 1, ATTN_NORM, 0);

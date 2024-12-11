@@ -474,6 +474,13 @@ typedef struct
 	int			power_armor_power;
 
 	int			ghost_type;
+
+	int			in_enemy_phase;
+	int			enemies_left;
+
+	int			phase1;
+	int			phase2;
+	int			phase3;
 } monsterinfo_t;
 
 
