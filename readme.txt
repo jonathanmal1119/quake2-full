@@ -32,8 +32,8 @@ Armored
 Coin
 Mushroom
 Wings
-TDB
 1 UP
+Vacuum Upgrade
 
 5 classic Mario power-ups
 Star
@@ -60,10 +60,10 @@ spawn <monster/item name>
 
 Ghost Names
 
+ghost
 ghost_fire
 ghost_water
 ghost_ice
-ghost_regular
 ghost_armored
 ghost_boss
 
@@ -78,5 +78,5 @@ POW
 coin
 mushroom
 wings
-
+vacuum_upgrade
 one_up
