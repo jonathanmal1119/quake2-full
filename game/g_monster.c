@@ -427,6 +427,29 @@ void monster_think (edict_t *self)
 	M_CatagorizePosition (self);
 	M_WorldEffects (self);
 	M_SetEffects (self);
+
+	if (self->fireTimer == NULL) {
+		self->fireTimer = 0;
+		self->fireCount = 0;
+	}
+
+	if (self->attack_type == 12) {
+
+
+		if (self->fireTimer >= 4) {
+			T_Damage(self, self, self, self->velocity, self->s.origin, 0, 5, 0, 0, MOD_BLASTER);
+			self->fireTimer = 0;
+			self->fireCount++;
+		}
+
+		if (self->fireCount >= 10) {
+			self->attack_type = 0;
+			self->fireCount = 0;
+			return;
+		}
+		
+		self->fireTimer++;
+	}
 }
 
 

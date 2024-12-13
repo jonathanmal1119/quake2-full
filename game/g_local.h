@@ -97,14 +97,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MINI_MUSHROOM 2
 #define FIRE_FLOWER 3
 #define ICE_FLOWER 4
-#define BOOMERANG 5
 
 // Other Powerups
 
 #define Coin 6
 #define MUSHROOM 7
 #define WINGS 8
-//#define TEMP 9
 #define ONE_UP 10
 
 
@@ -1004,7 +1002,6 @@ struct gclient_s
 
 	int			activePowerup;
 	int			activePowerupCount;
-	vec3_t		flagPos;
 };
 
 
@@ -1162,5 +1159,11 @@ struct edict_s
 	int			one_ups;
 	int			coins;
 	int			hasVacuumUpgrade;
+
+	// Fireball
+
+	int			fireCount;
+	int			fireTimer;
+
 };
 

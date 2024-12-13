@@ -1183,13 +1183,6 @@ qboolean Pickup_Mini_Mushroom(edict_t* ent, edict_t* other)
 	return true;
 }
 
-qboolean Pickup_Boomerang(edict_t* ent, edict_t* other)
-{
-	gi.centerprintf(other, "Boomerang Activated");
-	other->client->activePowerup = BOOMERANG;
-	return true;
-}
-
 qboolean Pickup_Fire_Flower(edict_t* ent, edict_t* other)
 {
 	gi.centerprintf(other, "Fire Flower Activated");
@@ -2371,27 +2364,6 @@ tank commander's head
 		NULL,
 		/* icon */		"a_bullets",
 		/* pickup */	"Mushroom",
-		/* width */		3,
-				50,
-				NULL,
-				0,
-				0,
-				NULL,
-				0,
-				/* precache */ ""
-	},
-
-	{
-		"boomerang",
-		Pickup_Boomerang,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/pack/tris.md2", EF_ROTATE,
-		NULL,
-		/* icon */		"a_bullets",
-		/* pickup */	"Boomerang",
 		/* width */		3,
 				50,
 				NULL,

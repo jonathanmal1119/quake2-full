@@ -696,76 +696,6 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 	gi.linkentity (rocket);
 }
 
-void fire_boomerang(edict_t* self, vec3_t start, vec3_t dir, int damage, int speed);
-
-void Boomerang_Think(edict_t* self,vec3_t dir) {
-	VectorInverse(dir);
-
-	edict_t* boomerang;
-
-	boomerang = G_Spawn();
-	VectorCopy(self->s.origin, boomerang->s.origin);
-	VectorCopy(dir, boomerang->movedir);
-	vectoangles(dir, boomerang->s.angles);
-	VectorScale(dir, 100, boomerang->velocity);
-	boomerang->movetype = MOVETYPE_FLYMISSILE;
-	boomerang->clipmask = MASK_SHOT;
-	boomerang->solid = SOLID_BBOX;
-	boomerang->s.effects |= EF_ROCKET;
-	VectorClear(boomerang->mins);
-	VectorClear(boomerang->maxs);
-	boomerang->s.modelindex = gi.modelindex("models/objects/rocket/tris.md2");
-	boomerang->owner = self;
-	boomerang->touch = G_FreeEdict;
-	boomerang->nextthink = level.time + 0.3;
-	boomerang->think = G_FreeEdict;
-	boomerang->dmg = 10;
-	boomerang->radius_dmg = 0;
-	boomerang->dmg_radius = 0;
-	boomerang->s.sound = gi.soundindex("weapons/rockfly.wav");
-	boomerang->classname = "boomerang";
-
-	if (self->client)
-		check_dodge(self, boomerang->s.origin, dir, 100);
-
-	gi.linkentity(boomerang);
-
-	//G_FreeEdict(self);
-}
-
-void fire_boomerang(edict_t* self, vec3_t start, vec3_t dir, int damage, int speed)
-{
-	edict_t* boomerang;
-
-	boomerang = G_Spawn();
-	VectorCopy(start, boomerang->s.origin);
-	VectorCopy(dir, boomerang->movedir);
-	vectoangles(dir, boomerang->s.angles);
-	VectorScale(dir, speed, boomerang->velocity);
-	boomerang->movetype = MOVETYPE_FLYMISSILE;
-	boomerang->clipmask = MASK_SHOT;
-	boomerang->solid = SOLID_BBOX;
-	boomerang->s.effects |= EF_ROCKET;
-	VectorClear(boomerang->mins);
-	VectorClear(boomerang->maxs);
-	boomerang->s.modelindex = gi.modelindex("models/objects/rocket/tris.md2");
-	boomerang->owner = self;
-	boomerang->touch = G_FreeEdict;
-	boomerang->nextthink = level.time + 0.3;
-	boomerang->think = Boomerang_Think;
-	boomerang->dmg = damage;
-	boomerang->radius_dmg = 0;
-	boomerang->dmg_radius = 0;
-	boomerang->s.sound = gi.soundindex("weapons/rockfly.wav");
-	boomerang->classname = "boomerang";
-
-	if (self->client)
-		check_dodge(self, boomerang->s.origin, dir, speed);
-
-	gi.linkentity(boomerang);
-}
-
-
 /*
 =================
 fire_rail
@@ -888,6 +818,12 @@ void bfg_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 		return;
 	}
 
+	if (self->attack_type == FIRE) {
+		other->attack_type = 12;
+		self->nextthink = level.time + FRAMETIME;
+		self->think = G_FreeEdict;
+		return;
+	}
 
 	if (other == self->owner)
 		return;
@@ -896,14 +832,15 @@ void bfg_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 	{
 		G_FreeEdict (self);
 		return;
-	}
+	} 
 
 	if (self->owner->client)
 		PlayerNoise(self->owner, self->s.origin, PNOISE_IMPACT);
 
 	// core explosion - prevents firing it into the wall/floor
-	if (other->takedamage)
-		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, 200, 0, 0, MOD_BFG_BLAST);
+	if (other->takedamage) 
+			T_Damage(other, self, self->owner, self->velocity, self->s.origin, plane->normal, 200, 0, 0, MOD_BFG_BLAST);
+		
 	T_RadiusDamage(self, self->owner, 200, other, 100, MOD_BFG_BLAST);
 
 	gi.sound (self, CHAN_VOICE, gi.soundindex ("weapons/bfg__x1b.wav"), 1, ATTN_NORM, 0);
@@ -968,7 +905,7 @@ void bfg_think (edict_t *self)
 		ignore = self;
 		VectorCopy (self->s.origin, start);
 		VectorMA (start, 2048, dir, end);
-		while(1 && self->attack_type != ICE)
+		while(1 && (self->attack_type != ICE && self->attack_type != FIRE))
 		{
 			tr = gi.trace (start, NULL, NULL, end, ignore, CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_DEADMONSTER);
 
@@ -1006,7 +943,7 @@ void bfg_think (edict_t *self)
 	self->nextthink = level.time + FRAMETIME;
 }
 
-void fire_custom_bfg(edict_t* self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int attck_type)
+void fire_custom_bfg(edict_t* self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int attck_type, edict_t* player)
 {
 	edict_t* bfg;
 
@@ -1022,7 +959,7 @@ void fire_custom_bfg(edict_t* self, vec3_t start, vec3_t dir, int damage, int sp
 	VectorClear(bfg->mins);
 	VectorClear(bfg->maxs);
 	bfg->s.modelindex = gi.modelindex("sprites/s_bfg1.sp2");
-	bfg->owner = self;
+	bfg->owner = player;
 	bfg->touch = bfg_touch;
 	bfg->nextthink = level.time + 8000 / speed;
 	bfg->think = G_FreeEdict;
