@@ -11,6 +11,7 @@ Play!
 How to See the features of the Mod.
 
 Luigi's Basic and Elemental attacks
+Jump to Squish
 Fire Upgrade
 Water Upgrade
 Ice Upgrade
@@ -18,10 +19,10 @@ Gust Attack
 Vacuum Attack
 
 5 Ghosts to vacuum
-Regular
 Ice Ghost
 Fire Ghost
 Water Ghost
+Shape Shifter
 Armored
 
 5 Other items/power-ups
@@ -47,7 +48,7 @@ How to see these features in game:
 Switching types
 use Switch <element>
 
-Vaccuming
+Vacuuming
 Give yourself the machinegun and it will pull the enemies closer and eventually kill them.
 give machinegun
 
@@ -55,11 +56,11 @@ Spawn function
 spawn <monster/item name>
 
 Ghost Names
-ghost
 ghost_fire
 ghost_water
 ghost_ice
 ghost_armored
+ghost_shape
 ghost_boss
 
 Item Names

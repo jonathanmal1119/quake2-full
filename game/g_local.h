@@ -88,6 +88,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define WATER 3
 #define ICE 4
 #define ARMORED 5
+#define SHAPE 6
 
 #define GUST 11
 
@@ -479,6 +480,8 @@ typedef struct
 	int			phase1;
 	int			phase2;
 	int			phase3;
+
+	int			shifts;
 } monsterinfo_t;
 
 
@@ -1164,6 +1167,5 @@ struct edict_s
 
 	int			fireCount;
 	int			fireTimer;
-
 };
 

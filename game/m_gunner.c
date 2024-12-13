@@ -280,8 +280,37 @@ mframe_t gunner_frames_pain1 [] =
 };
 mmove_t gunner_move_pain1 = {FRAME_pain101, FRAME_pain118, gunner_frames_pain1, gunner_run};
 
+void shape_shift(edict_t *prev) {
+	vec3_t forward, oforward, right, up, oup, offset;
+	AngleVectors(prev->s.angles, forward, right, up);
+
+	VectorInverse(forward);
+
+	edict_t* enemy = G_Spawn();
+	enemy->classname = "ghost_shape";
+
+	VectorScale(up, 50, oup);
+	VectorScale(forward, 40, oforward);
+
+	VectorAdd(prev->s.origin, oup, offset);
+	VectorAdd(offset, oforward, offset);
+
+	for (int i = 0; i < 3; i++)
+		enemy->s.origin[i] = offset[i];
+
+	ED_CallSpawn(enemy);
+	
+	enemy->monsterinfo.shifts = prev->monsterinfo.shifts + 1;
+
+	T_Damage(prev, enemy, enemy, enemy->velocity, enemy->s.origin, 0, 1000, 0, 0, 0);
+}
+
 void gunner_pain (edict_t *self, edict_t *other, float kick, int damage)
 {
+	if (self->monsterinfo.ghost_type == SHAPE && self->monsterinfo.shifts < 3) {
+		shape_shift(self);
+	}
+
 	if (self->health < (self->max_health / 2))
 		self->s.skinnum = 1;
 
@@ -633,7 +662,7 @@ void SP_monster_gunner (edict_t *self)
 	walkmonster_start (self);
 }
 
-void SP_ghost(edict_t* self)
+void SP_ghost_shape(edict_t* self)
 {
 	if (deathmatch->value)
 	{
@@ -673,7 +702,8 @@ void SP_ghost(edict_t* self)
 	self->monsterinfo.melee = NULL;
 	self->monsterinfo.sight = gunner_sight;
 	self->monsterinfo.search = gunner_search;
-	self->monsterinfo.ghost_type = NORMAL;
+	self->monsterinfo.ghost_type = SHAPE;
+	self->monsterinfo.shifts = 0;
 
 	gi.linkentity(self);
 
@@ -759,7 +789,7 @@ void SP_ghost_ice(edict_t* self)
 	VectorSet(self->mins, -16, -16, -24);
 	VectorSet(self->maxs, 16, 16, 32);
 
-	self->health = 175;
+	self->health = 250;
 	self->gib_health = -70;
 	self->mass = 200;
 
@@ -810,7 +840,7 @@ void SP_ghost_water(edict_t* self)
 	VectorSet(self->mins, -16, -16, -24);
 	VectorSet(self->maxs, 16, 16, 32);
 
-	self->health = 175;
+	self->health = 250;
 	self->gib_health = -70;
 	self->mass = 200;
 
@@ -861,7 +891,7 @@ void SP_ghost_armored(edict_t* self)
 	VectorSet(self->mins, -16, -16, -24);
 	VectorSet(self->maxs, 16, 16, 32);
 
-	self->health = 175;
+	self->health = 250;
 	self->gib_health = -70;
 	self->mass = 200;
 
