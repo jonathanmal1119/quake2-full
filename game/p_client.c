@@ -1664,6 +1664,20 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 		if (ent->groundentity && !pm.groundentity && (pm.cmd.upmove >= 10) && (pm.waterlevel == 0))
 		{
+			if (pm.cmd.upmove >= 100) {
+				edict_t* found = NULL;
+				while ((found = findradius(found, ent->s.origin, 250)) != NULL) {
+
+					if (found == ent)
+						continue;
+
+					if (!ent->takedamage)
+						continue;
+
+					T_Damage(found, found, found, found->velocity, found->s.origin, vec3_origin, 1000, 0, DAMAGE_RADIUS, MOD_BFG_EFFECT);
+				}
+			}
+			
 			gi.sound(ent, CHAN_VOICE, gi.soundindex("*jump1.wav"), 1, ATTN_NORM, 0);
 			PlayerNoise(ent, ent->s.origin, PNOISE_SELF);
 		}
