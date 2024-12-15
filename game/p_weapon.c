@@ -973,7 +973,6 @@ void Machinegun_Fire (edict_t *ent)
 	else
 		ent->client->ps.gunframe = 5;
 
-	ent->client->pers.inventory[ent->client->ammo_index]++;
 	/*if (ent->client->pers.inventory[ent->client->ammo_index] < 1)
 	{
 		ent->client->ps.gunframe = 6;
@@ -1002,7 +1001,6 @@ void Machinegun_Fire (edict_t *ent)
 	// raise the gun as it is firing
 	if (!deathmatch->value)
 	{
-		ent->client->machinegun_shots++;
 		if (ent->client->machinegun_shots > 9)
 			ent->client->machinegun_shots = 9;
 	}
@@ -1029,7 +1027,7 @@ void Machinegun_Fire (edict_t *ent)
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+	if ( ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 		ent->client->pers.inventory[ent->client->ammo_index]--;
 
 	ent->client->anim_priority = ANIM_ATTACK;
