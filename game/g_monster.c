@@ -418,6 +418,8 @@ void M_MoveFrame (edict_t *self)
 
 void monster_think (edict_t *self)
 {
+	if (self->)
+
 	M_MoveFrame (self);
 	if (self->linkcount != self->monsterinfo.linkcount)
 	{

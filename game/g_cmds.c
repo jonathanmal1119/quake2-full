@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "g_local.h"
 #include "m_player.h"
 
+void UpdateUI(edict_t* ent);
 
 char *ClientTeam (edict_t *ent)
 {
@@ -948,13 +949,14 @@ void Cmd_Switch_Attack_f(edict_t* ent, char* attack)
 	{
 		gi.bprintf(PRINT_HIGH, "Fire Enabled\n");
 		ent->client->current_attack_type = FIRE;
+		UpdateUI(ent);
 		return;
 	}
-
-	if (Q_stricmp(attack, "water") == 0 && ent->client->hasWater == 1)
+	else if (Q_stricmp(attack, "water") == 0 && ent->client->hasWater == 1)
 	{
 		gi.bprintf(PRINT_HIGH, "Water Enabled\n");
 		ent->client->current_attack_type = WATER;
+		UpdateUI(ent);
 		return;
 	}
 
@@ -962,13 +964,15 @@ void Cmd_Switch_Attack_f(edict_t* ent, char* attack)
 	{
 		gi.bprintf(PRINT_HIGH, "Ice Enabled\n");
 		ent->client->current_attack_type = ICE;
+		UpdateUI(ent);
 		return;
 	}
 
-	if (Q_stricmp(attack, "vaccum") == 0)
+	if (Q_stricmp(attack, "vacuum") == 0)
 	{
 		gi.bprintf(PRINT_HIGH, "Vaccum Enabled\n");
 		ent->client->current_attack_type = VACCUM;
+		UpdateUI(ent);
 		return;
 	}
 
@@ -976,6 +980,7 @@ void Cmd_Switch_Attack_f(edict_t* ent, char* attack)
 	{
 		gi.bprintf(PRINT_HIGH, "Gust Enabled\n");
 		ent->client->current_attack_type = GUST;
+		UpdateUI(ent);
 		return;
 	}
 }
@@ -1020,6 +1025,10 @@ void Cmd_Shoot(edict_t* ent, char* attack) {
 			shoot_ice_ball(ent);
 			break;
 	}
+}
+
+void Cmd_UI(edict_t* ent) {
+	UpdateUI(ent);
 }
 
 
@@ -1122,6 +1131,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_Switch_Attack_f(ent, gi.argv(1));
 	else if (Q_stricmp(cmd, "shoot") == 0)
 		Cmd_Shoot(ent, gi.argv(1));
+	else if (Q_stricmp(cmd, "ui") == 0)
+		Cmd_UI(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

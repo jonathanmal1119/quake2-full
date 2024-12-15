@@ -1297,7 +1297,7 @@ void ClientBeginDeathmatch (edict_t *ent)
 	ClientEndServerFrame (ent);
 }
 
-
+void UpdateUI(edict_t* ent);
 /*
 ===========
 ClientBegin
@@ -1360,6 +1360,8 @@ void ClientBegin (edict_t *ent)
 
 	// make sure all view stuff is valid
 	ClientEndServerFrame (ent);
+
+	//UpdateUI(ent);
 }
 
 /*
@@ -1782,6 +1784,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				gi.centerprintf(other, "Star Power Deactivated");
 				ent->client->activePowerup = 0;
 				ent->client->activePowerupCount = 0;
+				UpdateUI(ent);
 				return;
 			}
 
@@ -1797,6 +1800,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				T_Damage(found, ent, ent, ent->velocity, ent->s.origin, vec3_origin, 1000, 0, DAMAGE_RADIUS, MOD_BFG_EFFECT);
 			}
 			ent->client->activePowerupCount++;
+
 			break;
 
 		case FIRE_FLOWER:
@@ -1804,6 +1808,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				gi.centerprintf(other, "Fire Flower Deactivated");
 				ent->client->activePowerup = 0;
 				ent->client->activePowerupCount = 0;
+				UpdateUI(ent);
 				return;
 			}
 			ent->client->activePowerupCount++;
@@ -1814,6 +1819,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				gi.centerprintf(other, "Ice Flower Deactivated");
 				ent->client->activePowerup = 0;
 				ent->client->activePowerupCount = 0;
+				UpdateUI(ent);
 				return;
 			}
 			ent->client->activePowerupCount++;
@@ -1828,12 +1834,15 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				ent->client->activePowerup = 0;
 				ent->client->activePowerupCount = 0;
 				ent->movetype = MOVETYPE_WALK;
+				UpdateUI(ent);
 				return;
 			}
 
 			ent->client->activePowerupCount++;
 			break;
 	}
+
+	
 }
 
 

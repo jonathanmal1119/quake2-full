@@ -52,6 +52,8 @@ static int	power_shield_index;
 void Use_Quad (edict_t *ent, gitem_t *item);
 static int	quad_drop_timeout_hack;
 
+void UpdateUI(edict_t* ent);
+
 //======================================================================
 
 /*
@@ -1150,18 +1152,21 @@ qboolean Pickup_POW(edict_t* ent, edict_t* other)
 qboolean Pickup_Fire_Element(edict_t* ent, edict_t* other)
 {
 	other->client->hasFire = 1;
+	UpdateUI(other);
 	return true;
 }
 
 qboolean Pickup_Water_Element(edict_t* ent, edict_t* other)
 {
 	other->client->hasWater = 1;
+	UpdateUI(other);
 	return true;
 }
 
 qboolean Pickup_Ice_Element(edict_t* ent, edict_t* other)
 {
 	other->client->hasIce = 1;
+	UpdateUI(other);
 	return true;
 }
 
@@ -1172,6 +1177,7 @@ qboolean Pickup_Star(edict_t* ent, edict_t* other)
 {
 	gi.centerprintf(other, "Star Power Activated");
 	other->client->activePowerup = STAR;
+	UpdateUI(other);
 	return true;
 }
 
@@ -1187,6 +1193,7 @@ qboolean Pickup_Fire_Flower(edict_t* ent, edict_t* other)
 {
 	gi.centerprintf(other, "Fire Flower Activated");
 	other->client->activePowerup = FIRE_FLOWER;
+	UpdateUI(other);
 	return true;
 }
 
@@ -1194,6 +1201,7 @@ qboolean Pickup_Ice_Flower(edict_t* ent, edict_t* other)
 {
 	gi.centerprintf(other, "Ice Flower Activated");
 	other->client->activePowerup = ICE_FLOWER;
+	UpdateUI(other);
 	return true;
 }
 
@@ -1208,7 +1216,6 @@ qboolean Pickup_One_Up(edict_t* ent, edict_t* other)
 
 qboolean Pickup_Coin(edict_t* ent, edict_t* other)
 {
-	gi.centerprintf(other, "+1 Coin %d", other->one_ups);
 	other->coins++;
 
 	if (other->coins >= 10) {
@@ -1216,7 +1223,9 @@ qboolean Pickup_Coin(edict_t* ent, edict_t* other)
 		gi.centerprintf(other, "+1 Extra Life");
 		other->one_ups++;
 	}
-	
+	else 
+		gi.centerprintf(other, "+1 Coin %d", other->one_ups);
+
 	return true;
 }
 
@@ -1233,6 +1242,7 @@ qboolean Pickup_Wings(edict_t * ent, edict_t * other)
 	gi.centerprintf(other, "Wings Activated");
 	other->movetype = MOVETYPE_NOCLIP;
 	other->client->activePowerup = WINGS;
+	UpdateUI(other);
 	return true;
 }
 

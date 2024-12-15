@@ -305,8 +305,8 @@ Fires a single blaster bolt.  Used by the blaster and hyper blaster.
 */
 void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	if (other->monsterinfo.ghost_type != 0)
-		gi.bprintf(PRINT_HIGH, "%s | %d | %s %d\n", other->classname, other->monsterinfo.ghost_type, self->owner->classname, self->owner->client->current_attack_type);
+	//if (other->monsterinfo.ghost_type != 0)
+		//gi.bprintf(PRINT_HIGH, "%s | %d | %s %d\n", other->classname, other->monsterinfo.ghost_type, self->owner->classname, self->owner->client->current_attack_type);
 
 	int		mod;
 	int		knock = 50;
@@ -356,6 +356,9 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 			case ARMORED:
 				self->dmg /= 2;
 				break;
+			default:
+				self->dmg = 13;
+				break;
 
 		}
 		vec3_t* dir = self->velocity;
@@ -367,11 +370,13 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 
 			if (self->owner->client->current_attack_type != GUST) {
 				VectorInverse(dir);
-				self->dmg = 13;
+			}
+			else {
+				self->dmg = 0;
 			}
 		}
 
-		T_Damage(other, self, self->owner, dir, self->s.origin, plane->normal, self->dmg, knock, DAMAGE_ENERGY, mod);
+		T_Damage(other, self, self->owner, dir, self->s.origin, plane->normal, self->dmg, knock, 0, mod);
 	}
 	else
 	{

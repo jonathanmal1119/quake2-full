@@ -29,6 +29,8 @@ INTERMISSION
 ======================================================================
 */
 
+void UpdateUI(edict_t* ent);
+
 void MoveClientToIntermission (edict_t *ent)
 {
 	if (deathmatch->value || coop->value)
@@ -290,8 +292,6 @@ void Cmd_Score_f (edict_t *ent)
 	ent->client->showscores = true;
 	DeathmatchScoreboard (ent);
 }
-
-
 /*
 ==================
 HelpComputer
@@ -302,33 +302,40 @@ Draw help computer.
 void HelpComputer (edict_t *ent)
 {
 	char	string[1024];
-	//char	*sk;
+	char *fireB, *waterB, *iceB, *activePowerup;
 
-	//if (skill->value == 0)
-	//	sk = "easy";
-	//else if (skill->value == 1)
-	//	sk = "medium";
-	//else if (skill->value == 2)
-	//	sk = "hard";
-	//else
-	//	sk = "hard+";
+	if (ent->client->hasFire)
+		fireB = "Fire: Unlocked!";
+	else
+		fireB = "Fire: Locked!";
 
-	// send the layout
-	//Com_sprintf (string, sizeof(string),
-	//	"xv 32 yv 8 picn help "			// background
-	//	"xv 202 yv 12 string2 \"%s\" "		// skill
-	//	"xv 0 yv 24 cstring2 \"%s\" "		// level name
-	//	"xv 0 yv 54 cstring2 \"%s\" "		// help 1
-	//	"xv 0 yv 110 cstring2 \"%s\" "		// help 2
-	//	"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-	//	"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
-	//	sk,
-	//	level.level_name,
-	//	game.helpmessage1,
-	//	game.helpmessage2,
-	//	level.killed_monsters, level.total_monsters, 
-	//	level.found_goals, level.total_goals,
-	//	level.found_secrets, level.total_secrets);
+	if (ent->client->hasWater)
+		waterB = "Water: Unlocked!";
+	else
+		waterB = "Water: Locked!";
+
+	if (ent->client->hasIce)
+		iceB = "Ice: Unlocked!";
+	else
+		iceB = "Ice: Locked!";
+
+	switch (ent->client->activePowerup) {
+	case STAR:
+		activePowerup = "Active: Star";
+		break;
+	case FIRE_FLOWER:
+		activePowerup = "Active: Fire Flower";
+		break;
+	case ICE_FLOWER:
+		activePowerup = "Active: Ice Flower";
+		break;
+	case WINGS:
+		activePowerup = "Active: Wings";
+		break;
+	default:
+		activePowerup = "Active: None";
+		break;
+	}
 
 	Com_sprintf(string, sizeof(string),
 		"xv 32 yv 8 picn inventory "	// background
@@ -355,7 +362,7 @@ void HelpComputer (edict_t *ent)
 		"Goal: Vaccum ghosts",
 		"5 Types of Ghosts",
 		"Fire, Water, Ice",
-		"Regular, Armored",
+		"Shape Shifter, Armored",
 		"5 Classic PowerUps",
 		"Star, Mini Mushroom",
 		"Fire FLower, Ice Flower",
@@ -365,8 +372,8 @@ void HelpComputer (edict_t *ent)
 		"1-Up, Vacuum Upgrade",
 		"Fight the boss!",
 		"Controls",
-		"Vaccum by shooting",
-		"To vaccum elemental ghosts",
+		"Vacuum by shooting",
+		"To vacuum elemental ghosts",
 		"pick up the element badge",
 		"Switch with Switch <element>",
 		"spawn ghost_<element> ",
@@ -401,6 +408,7 @@ void Cmd_Help_f (edict_t *ent)
 	if (ent->client->showhelp && (ent->client->pers.game_helpchanged == game.helpchanged))
 	{
 		ent->client->showhelp = false;
+		UpdateUI(ent);
 		return;
 	}
 
@@ -610,4 +618,88 @@ void G_SetSpectatorStats (edict_t *ent)
 			(cl->chase_target - g_edicts) - 1;
 	else
 		cl->ps.stats[STAT_CHASE] = 0;
+}
+
+
+void UpdateUI(edict_t *ent) {
+	char	string[1024];
+	char	*fireB, *waterB, *iceB, *activePowerup, *activeElem;
+
+
+
+	if (ent->client->hasFire)
+		fireB = "Fire: Unlocked!";
+	else
+		fireB = "Fire: Locked!";
+
+	if (ent->client->hasWater)
+		waterB = "Water: Unlocked!";
+	else
+		waterB = "Water: Locked!";
+
+	if (ent->client->hasIce)
+		iceB = "Ice: Unlocked!";
+	else
+		iceB = "Ice: Locked!";
+
+	switch (ent->client->activePowerup) {
+		case STAR:
+			activePowerup = "Active: Star";
+			break;
+		case FIRE_FLOWER:
+			activePowerup = "Active: Fire Flower";
+			break;
+		case ICE_FLOWER:
+			activePowerup = "Active: Ice Flower";
+			break;
+		case WINGS:
+			activePowerup = "Active: Wings";
+			break;
+		default:
+			activePowerup = "Active: None";
+			break;
+	}
+
+	if (ent->client->current_attack_type == FIRE) {
+		activeElem = "Active: Fire";
+	}
+	else if (ent->client->current_attack_type == ICE) {
+		activeElem = "Active: Ice";
+	}
+	else if (ent->client->current_attack_type == WATER) {
+		activeElem = "Active: Water";
+	}
+	else if (ent->client->current_attack_type == GUST) {
+		activeElem = "Active: Gust";
+	}
+	else 
+		activeElem = "Active: None";
+
+	Com_sprintf(string, sizeof(string),
+		"xv -450 yv 400 picn inventory "	// background
+		"xv -482 yv 428 cstring2 \"%s\" "   // Stats
+		"xv -482 yv 460 cstring2 \"%s\" "	// Badges
+		"xv -482 yv 475 cstring2 \"%s\" "
+		"xv -482 yv 485 cstring2 \"%s\" "
+		"xv -482 yv 495 cstring2 \"%s\" "
+		"xv -482 yv 515 cstring2 \"%s\" "
+		"xv -482 yv 530 cstring2 \"%s\" "
+		"xv -482 yv 550 cstring2 \"%s\" "
+		"xv -482 yv 560 cstring2 \"%s\" ",
+		"Luigi's Stats",
+		"Badges Collected",
+		fireB,
+		waterB,
+		iceB,
+		"Power Ups",
+		activePowerup,
+		"Active Element",
+		activeElem
+	);
+
+	gi.WriteByte (svc_layout);
+	gi.WriteString (string);
+	gi.unicast(ent, true);
+
+	ent->client->showhelp = true;
 }

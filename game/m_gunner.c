@@ -368,6 +368,7 @@ void gunner_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 	if (self->monsterinfo.ghost_type == ARMORED) {
 		self->health = self->max_health;
 		self->monsterinfo.ghost_type = NORMAL;
+		gi.centerprintf(attacker, "Armor Broken");
 		return;
 	}
 
