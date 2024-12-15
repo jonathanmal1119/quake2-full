@@ -478,7 +478,7 @@ void Spawn_boss_enemies(edict_t *boss) {
 		enemy->owner = boss;
 
 		VectorScale(up, 50, oup);
-		VectorScale(forward, (40 * i), oforward);
+		VectorScale(forward, 10 + (40 * i), oforward);
 
 		VectorAdd(boss->s.origin, oup, offset);
 		VectorAdd(offset, oforward, offset);
@@ -495,13 +495,12 @@ void Spawn_boss_enemies(edict_t *boss) {
 
 void boss2_pain(edict_t* self, edict_t* other, float kick, int damage)
 {
-	gi.bprintf(PRINT_HIGH, "HP: %d | %d | Enemies:%d\n", self->health, self->monsterinfo.in_enemy_phase, self->monsterinfo.enemies_left);
+	gi.bprintf(PRINT_HIGH, "HP: %d\n", self->health);
 	if (self->monsterinfo.in_enemy_phase == 1) {
 		self->nextthink = level.time + 1000;
 		self->health += damage;
 		return;
 	}
-
 
 	if (self->health < (self->max_health * 0.25) && self->monsterinfo.phase3 == 0) {
 		if (self->monsterinfo.in_enemy_phase == 0) {

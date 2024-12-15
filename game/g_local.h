@@ -1167,5 +1167,7 @@ struct edict_s
 
 	int			fireCount;
 	int			fireTimer;
+
+	int			frozen;
 };
 

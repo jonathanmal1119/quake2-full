@@ -418,7 +418,20 @@ void M_MoveFrame (edict_t *self)
 
 void monster_think (edict_t *self)
 {
-	if (self->)
+	
+	
+	//if (self->frozen == 1) {
+	//	self->fireTimer++;
+	//	
+	//	gi.bprintf(PRINT_HIGH, "Fire: %d\n", self->fireTimer);
+	//	/*if (self->fireTimer >= 50) {
+	//		self->fireCount = 0;
+	//		self->fireTimer = 0;
+	//		self->frozen = 0;
+	//	}*/
+	//	return;
+	//}
+	
 
 	M_MoveFrame (self);
 	if (self->linkcount != self->monsterinfo.linkcount)
